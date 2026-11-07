@@ -13,13 +13,6 @@
       "source": "./",
       "category": "productivity",
       "homepage": "https://github.com/Jakeschincariol/day-trader-skill"
-    },
-    {
-      "name": "freellm",
-      "description": "Ask the free models behind your own FreeLLM API server from inside Claude Code. Needs FreeLLM API running (default http://localhost:3001) and its unified key in FREELLM_API_KEY.",
-      "source": "./plugins/freellm",
-      "category": "productivity",
-      "homepage": "https://github.com/tashfeenahmed/freellmapi"
     }
   ]
 }

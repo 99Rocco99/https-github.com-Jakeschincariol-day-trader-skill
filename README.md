@@ -57,22 +57,6 @@ The tools need Python 3.8 or newer. Nothing to pip install. The SEC tools
 email in `trader/config.json` (`"sec_user_agent": "Your Name you@example.com"`)
 or in the `SEC_USER_AGENT` environment variable.
 
-### The FreeLLM plugin
-
-This marketplace also carries a small `freellm` plugin. It lets Claude ask the
-free models behind your own [FreeLLM API](https://github.com/tashfeenahmed/freellmapi)
-server, for second opinions and cheap bulk work. Start FreeLLM API first
-(it serves on `http://localhost:3001`), then:
-
-```
-/plugin marketplace add 99Rocco99/https-github.com-Jakeschincariol-day-trader-skill
-/plugin install freellm@day-trader-skill
-```
-
-Give it your unified key from the FreeLLM dashboard's Keys page in the
-`FREELLM_API_KEY` environment variable, for example in the `env` block of
-`~/.claude/settings.json`. Then say "ask freellm ..." or run `/freellm:freellm`.
-
 ## The eleven
 
 | command | job | what it does |
