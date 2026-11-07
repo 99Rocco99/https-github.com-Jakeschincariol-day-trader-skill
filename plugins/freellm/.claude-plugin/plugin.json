@@ -1,0 +1,9 @@
+{
+  "name": "freellm",
+  "description": "Ask the free models behind your own FreeLLM API server (github.com/tashfeenahmed/freellmapi) from inside Claude Code: second opinions, bulk summaries and drafts on free-tier models.",
+  "version": "1.0.0",
+  "homepage": "https://github.com/tashfeenahmed/freellmapi",
+  "license": "MIT",
+  "keywords": ["claude-code", "freellmapi", "free-llm", "openai-compatible"],
+  "skills": "./skills/"
+}
