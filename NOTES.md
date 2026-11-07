@@ -9,11 +9,13 @@ Nothing.
 
 ## Next
 
-- Merge branch `claude/great-knuth-djg72q` into `main` so new sessions pick
-  up `CLAUDE.md` and this file (sessions start from `main`).
+Nothing planned. Ask the user.
 
 ## Log
 
+- 2026-11-07: Checked the branch (only CLAUDE.md, NOTES.md, .gitignore and
+  one test line changed; no trading code touched), then opened a pull
+  request and merged it into `main`.
 - 2026-11-07: Added `CLAUDE.md` (read by every session) and this file, plus
   a `.gitignore` for Python cache files.
 - 2026-11-07: Talked about claude-mem (thedotmack/claude-mem), a memory
