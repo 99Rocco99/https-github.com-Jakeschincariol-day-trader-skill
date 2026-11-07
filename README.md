@@ -1,216 +1,114 @@
-# The Day Trader skill
+# The Futures Analyzer skill
 
-11 Claude skills for day trading: scan thousands of charts, track breaking news, time every entry and exit, and replay every outcome before you risk a dollar.
+A Claude skill that analyzes futures and never trades them. It finds the
+contracts you can afford (margin under $4,000 by default), measures how
+readable each one moves during the day, and shows what is moving today
+compared with a normal day.
 
-Free, MIT, no signup, no API key. The tools are plain Python that read free
-public data: Yahoo Finance charts, Nasdaq Trader's symbol lists, SEC EDGAR
-and the House Clerk.
+It is plain Python with no dependencies, no API key and no signup. It reads
+free Yahoo Finance 5-minute futures bars.
 
-One scans thousands of charts for setups. Another tracks breaking news on
-every stock you watch. One watches a setup bar by bar and tells you the moment
-to get in, and another sets your stop and your target before you do. And the
-craziest one is the Time Machine: before you risk a dollar, it replays the
-rest of the session 10,000 times from the stock's own recent bars, plus every
-past day the same setup fired, and tells you the honest odds.
-
-And no trade goes through until you say yes. Nothing in this pack can place
-an order on its own. Paper trading is the default.
-
-> **Looking for the original Trader skill?** Copy an investor's 13F, the
-> stock screener, tax lots and rebalancing live in
-> [github.com/Jakeschincariol/trader-skill](https://github.com/Jakeschincariol/trader-skill).
-> This repo is its day-trading sequel: the Trader skill v2.
+This started as a fork of Jake Schincariol's
+[day-trader-skill](https://github.com/Jakeschincariol/day-trader-skill) (MIT).
+Everything that led to an order (entry signals, stops and targets, position
+sizing, the risk gate and the broker) has been removed. What is left is
+analysis only.
 
 ## Install
 
-Paste this into Claude:
+As a plugin, in Claude Code:
 
 ```
-https://github.com/Jakeschincariol/day-trader-skill
-
-install skill
+/plugin marketplace add 99Rocco99/https-github.com-Jakeschincariol-day-trader-skill
+/plugin install futures-analyzer@futures-analyzer
 ```
 
-Or as a plugin, in Claude Code:
-
-```
-/plugin marketplace add Jakeschincariol/day-trader-skill
-/plugin install day-trader-skill@day-trader-skill
-```
-
-Claude Code namespaces plugin skills, so installed as a plugin they show up as
-`/day-trader-skill:trader-scanner` and so on. Copy the folders instead if you want
-plain `/trader-scanner`:
+Or copy the folder in as a plain skill:
 
 ```bash
-git clone https://github.com/Jakeschincariol/day-trader-skill.git
-cp -r day-trader-skill/trader-* ~/.claude/skills/
+git clone https://github.com/99Rocco99/https-github.com-Jakeschincariol-day-trader-skill.git
+cp -r https-github.com-Jakeschincariol-day-trader-skill/futures-analyzer ~/.claude/skills/
 ```
 
-Project-local instead of global: copy the same folders into your repo's
-`.claude/skills/`. No Claude Code at all? Paste any single `SKILL.md` at the
-top of a chat and it runs as a mode. You lose the Python tools, but the method
-works.
+Then ask Claude things like "which futures can I afford under $4,000",
+"rank the cheap futures", "what's moving today" or "profile micro crude".
 
-The tools need Python 3.8 or newer. Nothing to pip install. The SEC tools
-(news filings, the analyst) ask you to identify yourself: put your name and
-email in `trader/config.json` (`"sec_user_agent": "Your Name you@example.com"`)
-or in the `SEC_USER_AGENT` environment variable.
+## What it does
 
-## The eleven
+| command | what you get |
+| --- | --- |
+| `analyze.py contracts` | all 50 contracts: price, notional, margin (estimated or yours), dollar value of one tick, and whether it fits your cap |
+| `analyze.py rank` | the contracts under your cap, ranked by how readable their daily movement has been over the last 60 days |
+| `analyze.py today` | each contract's current (or last) session against a normal session at the same time: range used, relative volume, cleanliness, where it sits against yesterday's range |
+| `analyze.py profile MCL` | one contract in depth: range percentiles, hour-by-hour share of the movement, weekdays, the last 10 sessions |
 
-| command | job | what it does |
-| --- | --- | --- |
-| `/trader-scanner` | Chart Scanner | Scans thousands of charts for setups: opening-range breakouts, flags, oversold bounces. |
-| `/trader-news` | News Monitor | Tracks breaking news on every stock you watch and flags what moves it. |
-| `/trader-entry` | Entry Timer | Watches a setup bar by bar and tells you the moment to get in. |
-| `/trader-exit` | Exit Planner | Sets your stop and your target before you enter, so you know when to get out. |
-| `/trader-timemachine` | Time Machine | Replays every possible outcome of a trade before you risk a dollar: 10,000 simulated sessions plus every past time the setup fired. |
-| `/trader-risk` | Risk Manager | Checks every trade against your limits and stops anything over them. |
-| `/trader-budget` | Budget Manager | Sizes every position to your budget and your max loss per trade. |
-| `/trader-broker` | Order Executor | Sends approved orders to your broker, paper trading by default, never without your yes. |
-| `/trader-alerts` | Price Alerts | Rings when a price, a stop or the opening bell hits. |
-| `/trader-analyst` | Earnings Analyst | Reads earnings reports and sums up what changed. |
-| `/trader-pelosi` | Pelosi Tracker | Reads Congress's stock-trade disclosures the minute they are filed. |
+The contracts cover micro and full-size stock indexes, crude, natural gas,
+metals, currencies, Treasuries, grains, softs, livestock and CME crypto. With
+the estimated margins, 31 of them come in under $4,000, including MES, MNQ,
+MYM, M2K, MCL, MGC, MHG, M6E, M6B, M6A, MBT, MET, the 10-year micro yield,
+6E, 6B, 6J, ZN, ZF, ZT, ZC, ZS, ZW, sugar, lean hogs and live cattle.
 
-## How to use it
+### What "readable" means
 
-Everything lands in a `trader/` folder in your project, and each skill reads
-what the last one wrote:
+- **Steady range**: the size of the day's move changes little from day to
+  day (a low coefficient of variation).
+- **Clean travel**: the open-to-close move is large compared with all the
+  back and forth on the way. It is scaled so a random walk scores 1.00.
+- **First hour**: how often the rest of the session kept, or reversed, the
+  first hour's direction, with a flag when that is no better than a coin flip.
+- **Enough ticks and volume**: a range of many ticks on a busy contract.
+
+None of these predicts direction. They describe how the price has moved.
+
+## Example
+
+Live data for Friday 2026-11-06, daytime sessions 2026-08-28 to 2026-11-05.
+The top of `rank` (`*` marks an estimated margin):
 
 ```
-scanner -> news -> entry -> exit -> timemachine -> budget -> risk -> broker   (one trade)
-alerts: stop, target, flat by the close                                       (while it is open)
-news / analyst / pelosi                                                        (on a schedule)
+symbol  name                 margin   avg range  ticks  range cv  clean  trend days  after 1st hour  per $1k margin  score
+ZM      Soybean Meal         $1,913*       $666     67      0.32   1.17         39%      60% cont ~            $348     58
+ZS      Soybeans             $2,986*       $762     61      0.34   1.23         39%       45% rev ~            $255     57
+LE      Live Cattle          $3,427*     $1,226    123      0.36   1.19         47%       49% rev ~            $358     56
+ZL      Soybean Oil          $2,617*       $646    108      0.34   1.09         41%      50% cont ~            $247     52
+MCL     Micro WTI Crude Oil    $813*       $273    273      0.41   1.06         27%      51% cont ~            $335     49
 ```
 
-An example, the trade in the reel: Tesla, Monday October 19 2026, real data.
+Over those 60 days, the grains and cattle had the steadiest, cleanest daily
+ranges. The micro stock indexes moved in more erratic sizes: MES had a range
+cv of 0.74 and a clean score of 0.97, about the same as a random walk. Only
+one contract had a first-hour statistic clearly different from a coin flip
+(MYM: the rest of the session reversed the first hour 67 % of the time).
 
-1. **`/trader-scanner`** at 10:15 AM ET: of the 231 charts in the reel's
-   scan, 42 had closed above their 15-minute opening range. TSLA is one: range 354.47 to 362.18,
-   the 10:10 candle closed at 364.18, 0.55 % over the top.
-2. **`/trader-news`**: the morning's TSLA headlines, in New York time
-   ("Tesla-SpaceX Merger Mania Strikes Wall Street Ahead of Earnings", 8:04,
-   tagged earnings and deal). Tesla reports this week: a day trade is out
-   before the close, so it is not exposed to the report.
-3. **`/trader-entry`** watched TSLA bar by bar. At 10:12 it said waiting (the
-   10:10 bar was still forming). At 10:15 it said triggered: the first
-   5-minute close above the range, 364.18.
-4. **`/trader-exit`** set the plan before the entry: stop at the range's
-   midpoint, 358.32, so 5.86 a share at risk; target one times that risk,
-   370.04; flat by 3:55 PM either way.
-5. **`/trader-timemachine`** replayed the rest of the day 10,000 times, each
-   5-minute candle drawn from TSLA's own candles at that time of day over the
-   previous 59 sessions (seed 19, so anyone can repeat it): target first
-   29.4 %, stop first 25.5 %, still open at the close 45.1 %. It also re-ran
-   the same rule on those 59 real sessions: it fired 33 times, 13 hit the
-   target, 15 the stop, 5 neither. Its verdict: close to a coin flip. That is
-   the point of looking before you risk a dollar.
-6. **`/trader-budget`** with a $5,000 account and a $50 max loss per trade:
-   50 / 5.86 = 8 shares ($2,913.44). If the stop fills at 358.32, the loss is
-   $46.88. It writes one bracket order: buy 8 TSLA, stop-loss 358.32,
-   take-profit 370.04.
-7. **`/trader-risk`** checks it against your limits: the max loss, the daily
-   loss limit, trades per day, reward to risk, the entry window, position
-   size and cash. PASS or BLOCK, with the reason.
-8. **`/trader-broker`** shows you the ticket in plain words. You type yes for
-   that exact order. Claude calls your brokerage connector (Alpaca's MCP
-   server, paper account by default), and Claude's own "Allow once / Deny"
-   card asks you one more time.
-9. **`/trader-alerts`** rings on the stop, the target and at 3:55 PM to
-   flatten whatever is still open.
-
-## The tools
-
-All standard-library Python. The data tools read public endpoints and are
-polite about it.
+## Tests
 
 ```bash
-python3 trader-scanner/scan.py universe                                # ~5,900 US stocks, Nasdaq Trader
-python3 trader-scanner/scan.py daily                                   # pre-market setups, whole universe
-python3 trader-scanner/scan.py orb --at 10:15                          # opening-range breakouts so far
-python3 trader-news/news.py --tickers TSLA --hours 12                  # headlines, 8-Ks, today's move
-python3 trader-entry/entry.py check TSLA --setup orb                   # waiting / triggered / expired
-python3 trader-entry/entry.py watch TSLA --every 30                    # bar by bar until it triggers
-python3 trader-exit/exit.py plan --stop or-mid --target 1R --write     # -> trader/plan.json
-python3 trader-timemachine/timemachine.py run --write                  # 10,000 replays + the history
-python3 trader-budget/size.py --write                                  # -> trader/orders.json
-python3 trader-risk/check.py                                           # PASS / BLOCK per order
-python3 trader-broker/ticket.py show                                   # the tickets, READY or not
-python3 trader-alerts/alerts.py add --from-plan                        # stop, target, flat by close
-python3 trader-alerts/alerts.py check                                  # rings what hit, once
-python3 trader-analyst/facts.py TSLA                                   # quarters, growth, EPS
-python3 trader-pelosi/ptr.py index --member pelosi                     # her PTRs this year
+python3 -m unittest discover -s tests
 ```
 
-```bash
-python3 -m unittest discover -s tests -v
-```
-
-The tests run offline, on fixtures cut from real data: TSLA's 5-minute bars
-for the 60 days to October 19 2026, the 10:15 AM opening-range scan, Yahoo's
-TSLA headlines that morning, the House Clerk's 2026 index, real PTR text and
-real XBRL facts. They reproduce every number in the example above.
+The tests run offline on saved Yahoo charts in `tests/fixtures/`.
 
 ## Fine print
 
 **Not financial advice.** This is software that reads public data and does
-arithmetic. It does not know your situation and it cannot see the future.
-Most people who day trade lose money. You can lose money. Decide for
-yourself, and talk to a licensed professional if you need advice.
+arithmetic. It cannot see the future, and nothing it prints is a
+recommendation to buy or sell.
 
-**No trade goes through until you say yes.** Only `/trader-broker` can lead to
-an order, and only after `/trader-risk` passes that exact order and you type
-yes for it in the chat. Set your brokerage tool to "Needs approval" in Claude
-(Customize, Connectors, tool permissions), never "Always allow", so Claude's
-own "Allow once / Deny" card is a second check. No options, margin, short
-selling or leverage unless you turn them on.
+**Futures are leveraged.** A small move in price is a large move in your
+account, in both directions. You can lose more than the margin you put up.
 
-**Paper first.** `"paper": true` is the default in `config.example.json`, and
-Alpaca's MCP server defaults to its paper account. Keys live in environment
-variables, never in the chat.
+**Margins are estimates unless you enter yours.** Estimated margins (marked
+`*`) are notional times a rough rate in `contracts.json`. Exchanges and
+brokers change margins often. Put your broker's numbers in
+`futures/margins.json` (see `margins.example.json`).
 
-**The Time Machine is a simulation, not a prediction.** It is built from the
-stock's own last 60 days of 5-minute bars. The future can do things those 60
-days never did: an earnings report, a halt, a headline. Treat its odds as a
-reality check, never as a promise.
+**60 days is a short window.** The statistics describe one recent stretch of
+the market. A change of regime can make them stale overnight.
 
-**A stop is a plan, not a guarantee.** In a fast market or across a gap, a
-stop order can fill well past its price. The max loss shown is the loss at
-the stop price.
+**The data is free and unofficial.** Yahoo Finance's chart endpoint can lag,
+change, have gaps or rate-limit you. Cotton's 5-minute bars were too sparse
+to use, so cotton is not in the list.
 
-**The data is free and unofficial.** Yahoo Finance's chart endpoint is not an
-official API: it can lag, change or rate-limit you. The scanner and the entry
-timer read 1-minute or 5-minute bars, not every tick. Check anything that
-matters against your broker before you act on it.
+## License
 
-**Day-trading rules.** FINRA removed the $25,000 pattern-day-trader minimum
-on June 4, 2026 (Regulatory Notice 26-10), and brokers may phase the change
-in until October 20, 2027, so yours may still apply the old rule. If it does,
-set `"pdt_guard": true` and `/trader-risk` counts your day trades.
-
-**Congress's trades are public, not inside information.** Members must disclose
-trades over $1,000 within 45 days (the STOCK Act). The Pelosi skill reads those
-public filings the minute they post.
-
-**Taxes.** Day-trading gains are short-term gains, and frequent trading makes
-wash sales likely. Nothing here is tax advice.
-
-## Files
-
-```
-trader-scanner/     SKILL.md, scan.py
-trader-news/        SKILL.md, news.py
-trader-entry/       SKILL.md, entry.py
-trader-exit/        SKILL.md, exit.py
-trader-timemachine/ SKILL.md, timemachine.py
-trader-risk/        SKILL.md, check.py
-trader-budget/      SKILL.md, size.py, config.example.json, targets.example.json
-trader-broker/      SKILL.md, ticket.py, claude_desktop_config.example.json
-trader-alerts/      SKILL.md, alerts.py, alerts.example.json
-trader-analyst/     SKILL.md, facts.py, metrics.example.json
-trader-pelosi/      SKILL.md, ptr.py
-tests/              unittest suite + offline fixtures
-```
-
-MIT. Made by [Jake Schincariol](https://opusjake.ai).
+MIT. See `LICENSE`.

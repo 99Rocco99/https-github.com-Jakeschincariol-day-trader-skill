@@ -1,0 +1,8 @@
+{
+  "_about": "Copy to futures/margins.json and put your broker's real initial (overnight) margin per contract, in dollars. Any contract listed here replaces the estimate. Remove the ones you do not know.",
+  "MES": 2400,
+  "MNQ": 3500,
+  "MCL": 850,
+  "MGC": 3300,
+  "M6E": 300
+}

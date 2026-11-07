@@ -1,22 +1,20 @@
 {
-  "name": "day-trader-skill",
-  "description": "11 Claude skills for day trading: scan thousands of charts, track breaking news, time every entry and exit, and replay every outcome before you risk a dollar.",
-  "version": "2.0.0",
+  "name": "futures-analyzer",
+  "description": "Analysis-only futures skill for Claude: finds contracts under your margin cap and ranks how readable their intraday movement is, then shows what is moving today. Never trades.",
+  "version": "3.0.0",
   "author": {
-    "name": "Jake Schincariol",
-    "url": "https://opusjake.ai"
+    "name": "99Rocco99"
   },
-  "homepage": "https://github.com/Jakeschincariol/day-trader-skill",
-  "repository": "https://github.com/Jakeschincariol/day-trader-skill",
+  "homepage": "https://github.com/99Rocco99/https-github.com-Jakeschincariol-day-trader-skill",
+  "repository": "https://github.com/99Rocco99/https-github.com-Jakeschincariol-day-trader-skill",
   "license": "MIT",
   "keywords": [
     "claude-code",
     "claude-skills",
-    "day-trading",
-    "stock-market",
-    "backtesting",
-    "opening-range-breakout",
-    "paper-trading"
+    "futures",
+    "micro-futures",
+    "market-analysis",
+    "intraday"
   ],
   "skills": "./"
 }

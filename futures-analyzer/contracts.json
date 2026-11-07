@@ -1,0 +1,62 @@
+{
+  "_about": "Contract specs for futures-analyzer. symbol is the Yahoo Finance root (Yahoo adds =F). point_value is US dollars per 1.00 move in the price exactly as Yahoo quotes it (grains, softs and livestock are quoted in cents). tick is the minimum price move in those same units. margin_pct is a rough ESTIMATE of exchange initial margin as a share of notional, used only when you have not set a real margin in futures/margins.json. Exchanges change margins often and brokers add their own: check yours. rth is the main daytime session, New York time.",
+  "contracts": [
+    {"symbol": "MES", "name": "Micro E-mini S&P 500", "group": "equity", "micro": true, "point_value": 5, "tick": 0.25, "margin_pct": 0.065, "rth": ["09:30", "16:00"]},
+    {"symbol": "MNQ", "name": "Micro E-mini Nasdaq-100", "group": "equity", "micro": true, "point_value": 2, "tick": 0.25, "margin_pct": 0.065, "rth": ["09:30", "16:00"]},
+    {"symbol": "MYM", "name": "Micro E-mini Dow", "group": "equity", "micro": true, "point_value": 0.5, "tick": 1, "margin_pct": 0.065, "rth": ["09:30", "16:00"]},
+    {"symbol": "M2K", "name": "Micro E-mini Russell 2000", "group": "equity", "micro": true, "point_value": 5, "tick": 0.1, "margin_pct": 0.07, "rth": ["09:30", "16:00"]},
+    {"symbol": "ES", "name": "E-mini S&P 500", "group": "equity", "micro": false, "point_value": 50, "tick": 0.25, "margin_pct": 0.065, "rth": ["09:30", "16:00"]},
+    {"symbol": "NQ", "name": "E-mini Nasdaq-100", "group": "equity", "micro": false, "point_value": 20, "tick": 0.25, "margin_pct": 0.065, "rth": ["09:30", "16:00"]},
+    {"symbol": "YM", "name": "E-mini Dow ($5)", "group": "equity", "micro": false, "point_value": 5, "tick": 1, "margin_pct": 0.065, "rth": ["09:30", "16:00"]},
+    {"symbol": "RTY", "name": "E-mini Russell 2000", "group": "equity", "micro": false, "point_value": 50, "tick": 0.1, "margin_pct": 0.07, "rth": ["09:30", "16:00"]},
+
+    {"symbol": "MCL", "name": "Micro WTI Crude Oil", "group": "energy", "micro": true, "point_value": 100, "tick": 0.01, "margin_pct": 0.09, "rth": ["09:00", "14:30"]},
+    {"symbol": "CL", "name": "WTI Crude Oil", "group": "energy", "micro": false, "point_value": 1000, "tick": 0.01, "margin_pct": 0.09, "rth": ["09:00", "14:30"]},
+    {"symbol": "QG", "name": "E-mini Natural Gas", "group": "energy", "micro": false, "point_value": 2500, "tick": 0.005, "margin_pct": 0.15, "rth": ["09:00", "14:30"]},
+    {"symbol": "NG", "name": "Natural Gas", "group": "energy", "micro": false, "point_value": 10000, "tick": 0.001, "margin_pct": 0.15, "rth": ["09:00", "14:30"]},
+    {"symbol": "RB", "name": "RBOB Gasoline", "group": "energy", "micro": false, "point_value": 42000, "tick": 0.0001, "margin_pct": 0.08, "rth": ["09:00", "14:30"]},
+    {"symbol": "HO", "name": "Heating Oil", "group": "energy", "micro": false, "point_value": 42000, "tick": 0.0001, "margin_pct": 0.08, "rth": ["09:00", "14:30"]},
+
+    {"symbol": "MGC", "name": "Micro Gold", "group": "metals", "micro": true, "point_value": 10, "tick": 0.1, "margin_pct": 0.08, "rth": ["08:20", "13:30"]},
+    {"symbol": "GC", "name": "Gold", "group": "metals", "micro": false, "point_value": 100, "tick": 0.1, "margin_pct": 0.08, "rth": ["08:20", "13:30"]},
+    {"symbol": "SIL", "name": "Micro Silver (1,000 oz)", "group": "metals", "micro": true, "point_value": 1000, "tick": 0.005, "margin_pct": 0.12, "rth": ["08:25", "13:25"]},
+    {"symbol": "SI", "name": "Silver", "group": "metals", "micro": false, "point_value": 5000, "tick": 0.005, "margin_pct": 0.12, "rth": ["08:25", "13:25"]},
+    {"symbol": "MHG", "name": "Micro Copper", "group": "metals", "micro": true, "point_value": 2500, "tick": 0.0005, "margin_pct": 0.08, "rth": ["08:10", "13:00"]},
+    {"symbol": "HG", "name": "Copper", "group": "metals", "micro": false, "point_value": 25000, "tick": 0.0005, "margin_pct": 0.08, "rth": ["08:10", "13:00"]},
+    {"symbol": "PL", "name": "Platinum", "group": "metals", "micro": false, "point_value": 50, "tick": 0.1, "margin_pct": 0.09, "rth": ["08:20", "13:05"]},
+
+    {"symbol": "M6E", "name": "Micro EUR/USD", "group": "fx", "micro": true, "point_value": 12500, "tick": 0.0001, "margin_pct": 0.022, "rth": ["08:20", "15:00"]},
+    {"symbol": "6E", "name": "Euro FX", "group": "fx", "micro": false, "point_value": 125000, "tick": 0.00005, "margin_pct": 0.022, "rth": ["08:20", "15:00"]},
+    {"symbol": "M6B", "name": "Micro GBP/USD", "group": "fx", "micro": true, "point_value": 6250, "tick": 0.0001, "margin_pct": 0.025, "rth": ["08:20", "15:00"]},
+    {"symbol": "6B", "name": "British Pound", "group": "fx", "micro": false, "point_value": 62500, "tick": 0.0001, "margin_pct": 0.025, "rth": ["08:20", "15:00"]},
+    {"symbol": "M6A", "name": "Micro AUD/USD", "group": "fx", "micro": true, "point_value": 10000, "tick": 0.0001, "margin_pct": 0.03, "rth": ["08:20", "15:00"]},
+    {"symbol": "6A", "name": "Australian Dollar", "group": "fx", "micro": false, "point_value": 100000, "tick": 0.00005, "margin_pct": 0.03, "rth": ["08:20", "15:00"]},
+    {"symbol": "6J", "name": "Japanese Yen", "group": "fx", "micro": false, "point_value": 12500000, "tick": 0.0000005, "margin_pct": 0.035, "rth": ["08:20", "15:00"]},
+    {"symbol": "6C", "name": "Canadian Dollar", "group": "fx", "micro": false, "point_value": 100000, "tick": 0.00005, "margin_pct": 0.02, "rth": ["08:20", "15:00"]},
+
+    {"symbol": "ZT", "name": "2-Year T-Note", "group": "rates", "micro": false, "point_value": 2000, "tick": 0.00390625, "margin_pct": 0.005, "rth": ["08:20", "15:00"]},
+    {"symbol": "ZF", "name": "5-Year T-Note", "group": "rates", "micro": false, "point_value": 1000, "tick": 0.0078125, "margin_pct": 0.014, "rth": ["08:20", "15:00"]},
+    {"symbol": "ZN", "name": "10-Year T-Note", "group": "rates", "micro": false, "point_value": 1000, "tick": 0.015625, "margin_pct": 0.02, "rth": ["08:20", "15:00"]},
+    {"symbol": "ZB", "name": "30-Year T-Bond", "group": "rates", "micro": false, "point_value": 1000, "tick": 0.03125, "margin_pct": 0.04, "rth": ["08:20", "15:00"]},
+    {"symbol": "10Y", "name": "Micro 10-Year Yield", "group": "rates", "micro": true, "point_value": 1000, "tick": 0.001, "margin_pct": 0.07, "rth": ["08:20", "15:00"]},
+
+    {"symbol": "ZC", "name": "Corn", "group": "grains", "micro": false, "point_value": 50, "tick": 0.25, "margin_pct": 0.06, "rth": ["09:30", "14:20"]},
+    {"symbol": "MZC", "name": "Micro Corn", "group": "grains", "micro": true, "point_value": 5, "tick": 0.5, "margin_pct": 0.06, "rth": ["09:30", "14:20"]},
+    {"symbol": "ZS", "name": "Soybeans", "group": "grains", "micro": false, "point_value": 50, "tick": 0.25, "margin_pct": 0.05, "rth": ["09:30", "14:20"]},
+    {"symbol": "ZW", "name": "Chicago Wheat", "group": "grains", "micro": false, "point_value": 50, "tick": 0.25, "margin_pct": 0.07, "rth": ["09:30", "14:20"]},
+    {"symbol": "ZM", "name": "Soybean Meal", "group": "grains", "micro": false, "point_value": 100, "tick": 0.1, "margin_pct": 0.06, "rth": ["09:30", "14:20"]},
+    {"symbol": "ZL", "name": "Soybean Oil", "group": "grains", "micro": false, "point_value": 600, "tick": 0.01, "margin_pct": 0.07, "rth": ["09:30", "14:20"]},
+
+    {"symbol": "SB", "name": "Sugar #11", "group": "softs", "micro": false, "point_value": 1120, "tick": 0.01, "margin_pct": 0.08, "rth": ["03:30", "13:00"]},
+    {"symbol": "KC", "name": "Coffee C", "group": "softs", "micro": false, "point_value": 375, "tick": 0.05, "margin_pct": 0.1, "rth": ["04:15", "13:30"]},
+    {"symbol": "CC", "name": "Cocoa", "group": "softs", "micro": false, "point_value": 10, "tick": 1, "margin_pct": 0.15, "rth": ["04:45", "13:30"]},
+
+    {"symbol": "LE", "name": "Live Cattle", "group": "livestock", "micro": false, "point_value": 400, "tick": 0.025, "margin_pct": 0.04, "rth": ["09:30", "14:05"]},
+    {"symbol": "HE", "name": "Lean Hogs", "group": "livestock", "micro": false, "point_value": 400, "tick": 0.025, "margin_pct": 0.08, "rth": ["09:30", "14:05"]},
+    {"symbol": "GF", "name": "Feeder Cattle", "group": "livestock", "micro": false, "point_value": 500, "tick": 0.025, "margin_pct": 0.04, "rth": ["09:30", "14:05"]},
+
+    {"symbol": "MBT", "name": "Micro Bitcoin (0.1 BTC)", "group": "crypto", "micro": true, "point_value": 0.1, "tick": 5, "margin_pct": 0.35, "rth": ["09:30", "16:00"]},
+    {"symbol": "MET", "name": "Micro Ether (0.1 ETH)", "group": "crypto", "micro": true, "point_value": 0.1, "tick": 0.5, "margin_pct": 0.4, "rth": ["09:30", "16:00"]},
+    {"symbol": "BTC", "name": "Bitcoin (5 BTC)", "group": "crypto", "micro": false, "point_value": 5, "tick": 5, "margin_pct": 0.35, "rth": ["09:30", "16:00"]}
+  ]
+}
